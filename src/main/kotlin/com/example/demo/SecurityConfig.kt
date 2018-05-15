@@ -14,12 +14,18 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager
 @EnableWebSecurity
 class SecurityConfig: WebSecurityConfigurerAdapter() {
 
-    override fun configure(http: HttpSecurity?) {
-        http!!.sessionManagement()
+    override fun configure(http: HttpSecurity) {
+        http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        http!!.authorizeRequests()
-                .anyRequest().fullyAuthenticated()
+        http.authorizeRequests()
+//                .antMatchers("/h2-console/**").anonymous()
+                .antMatchers("/users/**").fullyAuthenticated()
                 .and().httpBasic()
+
+        // required for h2-console
+        http.csrf().disable()
+        http.headers().frameOptions().disable()
+
     }
 
     @Bean
